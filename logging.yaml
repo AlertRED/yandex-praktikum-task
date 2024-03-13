@@ -1,0 +1,27 @@
+version: 1
+disable_existing_loggers: no
+
+formatters:
+  standart:
+    format: '%(asctime)s - %(levelname)s - %(message)s'
+
+
+handlers:
+  bot_handler:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: standart
+    when: D
+    backupCount: 0
+    filename: ./logs/bot_access.log
+    encoding: utf8
+
+loggers:
+    root:
+        level: INFO
+        handlers: [console_handler]
+    bot:
+        level: INFO
+        handlers: [bot_handler]
+        propagate: no
+        qualname: bot

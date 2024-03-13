@@ -1,0 +1,36 @@
+version: "3"
+services:  
+
+  rss: # recognize socket server
+    container_name: rss
+    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.rss
+    env_file:
+      - .env.docker
+    networks:
+      - deploy_network
+    volumes:
+      - .:/code
+    command: python run_rss.py
+
+  yp-bot:
+    container_name: yp-bot
+    depends_on:
+      - rss
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.bot
+    env_file:
+      - .env.docker
+    environment:
+      - STT_SOCKET_HOST=rss
+    networks:
+      - deploy_network
+    volumes:
+      - .:/code
+    command: python run_bot.py
+
+networks:
+    deploy_network:
